@@ -159,6 +159,4 @@ By combining centralized network control, DSCP-based packet identification, Open
 
 ---
 
-**Project Domain:** Computer Networks | Software Defined Networking | Network Security and QoS
-
 **Platform:** Ubuntu, Mininet and Open vSwitch
