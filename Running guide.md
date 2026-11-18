@@ -50,94 +50,25 @@ xterm h1
 **h1 terminal:**
 
 ```bash
-cd ~/emergency-sdn
-python3 server.py
+python3 server.py --interval 0.2 --timeout 0.3 --retries 3 --label normal
 ```
-
-### Step 5: Send Emergency Alert
-
-At the h1 `alert>` prompt:
-
-```text
-TEST EMERGENCY ALERT
-```
-
-Verify that both h2 and h3 receive the alert.
-
----
+Enter number of alerts (or q to quit): 20
+Enter number of alerts (or q to quit): 50
+Enter number of alerts (or q to quit): 100
 
 ## PART 2: Congestion Testing (Fresh Setup)
 
-### Step 1: Keep Ryu Running and Close Mininet
-
-At the existing `mininet>` prompt:
-
-```text
-exit
-```
-
-In a normal Ubuntu terminal:
-
-```bash
-sudo mn -c
-```
-
-### Step 2: Start Fresh Mininet
-
-```bash
-cd ~/emergency-sdn
-sudo python3 topo.py
-```
+### Step 1: Continue in mininet terminal
 
 At `mininet>`:
 
-```text
-pingall
+```
 xterm h2 h3
 ```
 
-### Step 3: Register Subscribers Again
+### Step 2: Start Background UDP Receiver
 
-**h2 terminal:**
-
-```bash
-cd ~/emergency-sdn
-python3 client.py --server 10.0.0.1 --port 9999
-```
-
-**h3 terminal:**
-
-```bash
-cd ~/emergency-sdn
-python3 client.py --server 10.0.0.1 --port 9998
-```
-
-### Step 4: Start Fresh Emergency Server
-
-At `mininet>`:
-
-```text
-xterm h1
-```
-
-**h1 terminal:**
-
-```bash
-cd ~/emergency-sdn
-python3 server.py
-```
-
-Wait for both subscribers to register.
-
-### Step 5: Start Background UDP Receiver
-
-At `mininet>`:
-
-```text
-xterm h3 h4
-```
-
-**New h3 terminal:**
+**In New h3 terminal:**
 
 ```bash
 iperf -s -u -p 6000
@@ -145,7 +76,7 @@ iperf -s -u -p 6000
 
 ### Step 6: Start Congestion
 
-**h4 terminal:**
+**In h4 terminal:**
 
 ```bash
 iperf -c 10.0.0.3 -u -p 6000 -b 5M -t 60
@@ -153,27 +84,11 @@ iperf -c 10.0.0.3 -u -p 6000 -b 5M -t 60
 
 ### Step 7: Send Emergency Alert During Congestion
 
-In the original h1 server terminal, at `alert>`:
+Enter number of alerts (or q to quit): 20
+Enter number of alerts (or q to quit): 50
+Enter number of alerts (or q to quit): 100
 
-```text
-EMERGENCY ALERT DURING CONGESTION
-```
-
-Check whether both subscribers receive the alert.
-
-### Step 8: Verify SDN Priority and Queue Statistics
-
-In a normal Ubuntu terminal:
-
-```bash
-sudo ovs-ofctl -O OpenFlow13 dump-flows s1
-
-sudo ovs-ofctl -O OpenFlow13 queue-stats s1 3
-```
-
-Check the Ryu terminal for congestion monitoring messages.
-
----
+### Check RYU TERMINAL TO CONFIRM IF THE EMERGENCY FLOW IS SENT BETWEEN CONGESTION
 
 ## Network Configuration
 
